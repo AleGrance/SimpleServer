@@ -9,22 +9,35 @@ module.exports = (sequelize, DataType) => {
         user_name: {
             type: DataType.STRING,
             allowNull: false,
+            unique: {
+                msg: 'El user_name ingresado ya existe!',
+                fields: ['user_name']
+            },
             validate: {
-                notEmpty: false
+                notEmpty: {
+                    msg: 'El nombre de usuario no debe estar vacio!',
+                    fields: ['user_name']
+                }
             }
         },
         user_fullname: {
             type: DataType.STRING,
             allowNull: false,
             validate: {
-                notEmpty: false
+                notEmpty: {
+                    msg: 'El nombre full de usuario no debe estar vacio!',
+                    fields: ['user_fullname']
+                }
             }
         },
         user_password: {
             type: DataType.STRING,
             allowNull: false,
             validate: {
-                notEmpty: true
+                notEmpty: {
+                    msg: 'La no contraseña no debe estar vacia!',
+                    fields: ['user_password']
+                }
             }
         },
         user_email: {
