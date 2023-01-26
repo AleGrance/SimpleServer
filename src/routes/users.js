@@ -8,7 +8,7 @@ module.exports = app => {
                 .then(result => res.json(result))
                 .catch(error => {
                     res.status(402).json({
-                        msg: error.menssage
+                        msg: error
                     });
                 });
         })
@@ -34,7 +34,7 @@ module.exports = app => {
             // Insert new user
             Users.create(user)
                 .then(result => res.json(result))
-                .catch(error => res.json(error.errors));
+                .catch(error => res.json(error.message));
         })
 
     app.route('/users/:user_id')

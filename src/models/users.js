@@ -32,10 +32,13 @@ module.exports = (sequelize, DataType) => {
             allowNull: false,
             unique: {
                 msg: 'El correo ingresado ya existe',
-                fields: ['email']
+                fields: ['user_email']
             },
             validate: {
-                notEmpty: true
+                notEmpty: {
+                    msg: 'El correo no debe estar vacio!',
+                    fields: ['user_email']
+                }
             }
         }
     });
@@ -49,7 +52,7 @@ module.exports = (sequelize, DataType) => {
             foreignKey: {
                 name: 'role_id',
                 allowNull: false
-              }
+            }
         });
     };
 
