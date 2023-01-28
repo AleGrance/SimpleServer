@@ -7,7 +7,6 @@ module.exports = (sequelize, DataType) => {
             autoIncrement: true
         },
 
-        //comentario
         user_name: {
             type: DataType.STRING,
             allowNull: false,
