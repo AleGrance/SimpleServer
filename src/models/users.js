@@ -6,6 +6,8 @@ module.exports = (sequelize, DataType) => {
             primaryKey: true,
             autoIncrement: true
         },
+
+        //comentario
         user_name: {
             type: DataType.STRING,
             allowNull: false,
