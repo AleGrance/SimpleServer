@@ -57,10 +57,13 @@ module.exports = (sequelize, DataType) => {
         }
     });
 
+    // Respetar el orden
+    // Primero los hasMany
     Users.associate = (models) => {
         Users.hasMany(models.Tasks);
     };
 
+    // Segundo los belongsTo
     Users.associate = (models) => {
         Users.belongsTo(models.Roles, {
             foreignKey: {
