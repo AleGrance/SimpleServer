@@ -77,39 +77,40 @@ module.exports = app => {
             }
         });
 
-    app.route('/users/:user_id')
-        .get((req, res) => {
-            Users.findOne({
-                    where: req.params
-                })
-                .then(result => res.json(result))
-                .catch(error => {
-                    res.status(404).json({
-                        msg: error.message
-                    });
-                });
-        })
-        .put((req, res) => {
-            Users.update(req.body, {
-                    where: req.params
-                })
-                .then(result => res.sendStatus(204))
-                .catch(error => {
-                    res.status(412).json({
-                        msg: error.message
-                    });
-                })
-        })
-        .delete((req, res) => {
-            //const id = req.params.id;
-            Users.destroy({
-                    where: req.params
-                })
-                .then(() => res.json(req.params))
-                .catch(error => {
-                    res.status(412).json({
-                        msg: error.message
-                    });
-                })
-        })
+    // app.route('/users/:user_id')
+    //     .get((req, res) => {
+    //         Users.findOne({
+    //                 where: req.params
+    //             })
+    //             .then(result => res.json(result))
+    //             .catch(error => {
+    //                 res.status(404).json({
+    //                     msg: error.message
+    //                 });
+    //             });
+    //     })
+    //     .put((req, res) => {
+    //         Users.update(req.body, {
+    //                 where: req.params
+    //             })
+    //             .then(result => res.sendStatus(204))
+    //             .catch(error => {
+    //                 res.status(412).json({
+    //                     msg: error.message
+    //                 });
+    //             })
+    //     })
+    //     .delete((req, res) => {
+    //         //const id = req.params.id;
+    //         Users.destroy({
+    //                 where: req.params
+    //             })
+    //             .then(() => res.json(req.params))
+    //             .catch(error => {
+    //                 res.status(412).json({
+    //                     msg: error.message
+    //                 });
+    //             })
+    //     })
+
 };
