@@ -1,7 +1,7 @@
 module.exports = app => {
     const Roles = app.db.models.Roles;
 
-    app.route('/roles')
+    app.route('/api/roles')
         .get((req, res) => {
             Roles.findAll()
                 .then(result => res.json(result))
@@ -18,7 +18,7 @@ module.exports = app => {
                 .catch(error => res.json(error.errors));
         })
 
-    app.route('/roles/:role_id')
+    app.route('/api/roles/:role_id')
         .get((req, res) => {
             Roles.findOne({
                     where: req.params,

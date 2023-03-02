@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js';
 module.exports = app => {
     const Users = app.db.models.Users;
 
-    app.route('/auth')
+    app.route('/api/auth')
         .get((req, res) => {
             res.send("Api Auth");
         })

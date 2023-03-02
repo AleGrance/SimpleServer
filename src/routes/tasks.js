@@ -2,7 +2,7 @@ module.exports = app => {
     const Tasks = app.db.models.Tasks;
     const Users = app.db.models.Users;
 
-    app.route('/tasks')
+    app.route('/api/tasks')
         .get((req, res) => {
             Tasks.findAll({
                 order: [['createdAt', 'DESC']]

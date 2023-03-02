@@ -13,7 +13,7 @@ module.exports = app => {
     const apiToken = "35dd7b33-3c2a-48a4-827f-042e57c9c3b8";
 
 
-    app.route('/users')
+    app.route('/api/users')
         .get((req, res) => {
             if (!req.headers.apitoken) {
                 return res.status(403).send({
