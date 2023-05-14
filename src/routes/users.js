@@ -68,11 +68,11 @@ module.exports = app => {
                 // Insert new user
                 Users.create(user)
                     .then(result => res.json({
-                        msg: 'success',
+                        status: 'success',
                         body: result
                     }))
                     .catch(error => res.json({
-                        msg: 'error',
+                        status: 'error',
                         body: error.errors
                     }));
             } else {

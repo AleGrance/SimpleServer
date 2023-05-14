@@ -15,11 +15,11 @@ module.exports = app => {
             console.log(req.body);
             Roles.create(req.body)
                 .then(result => res.json({
-                    msg: 'success',
+                    status: 'success',
                     body: result
                 }))
                 .catch(error => res.json({
-                    msg: 'error',
+                    status: 'error',
                     body: error.errors
                 }));
         })
