@@ -14,8 +14,14 @@ module.exports = app => {
         .post((req, res) => {
             console.log(req.body);
             Roles.create(req.body)
-                .then(result => res.json(result))
-                .catch(error => res.json(error.errors));
+                .then(result => res.json({
+                    msg: 'success',
+                    body: result
+                }))
+                .catch(error => res.json({
+                    msg: 'error',
+                    body: error.errors
+                }));
         })
 
     app.route('/api/roles/:role_id')

@@ -67,8 +67,14 @@ module.exports = app => {
                 user.user_password = CryptoJS.AES.encrypt(user.user_password, 'secret').toString();
                 // Insert new user
                 Users.create(user)
-                    .then(result => res.json(result))
-                    .catch(error => res.json(error.message));
+                    .then(result => res.json({
+                        msg: 'success',
+                        body: result
+                    }))
+                    .catch(error => res.json({
+                        msg: 'error',
+                        body: error.errors
+                    }));
             } else {
                 return res.status(403).send({
                     error: "Forbidden",
