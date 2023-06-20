@@ -27,7 +27,14 @@ module.exports = app => {
                     if(req.body.user_password !== passDecrypted) return res.status(401).send({ message: "El password es incorrecto", auth: false, token: null });
                     // Gen token
                     var token = jwt.sign({ id: result.user_id }, 'secret', {expiresIn: 60 * 60 * 24});
-                    res.status(200).send({message: "Acceso correcto", auth: true, token: token, usuario: result.user_fullname});
+                    res.status(200).send({
+                        message: "Acceso correcto", 
+                        auth: true, 
+                        token: token, 
+                        user_fullname: result.user_fullname,
+                        user_id: result.user_id,
+                        role_id: result.role_id
+                    });
                 })
                 .catch(error => {
                     res.send(error);
