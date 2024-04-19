@@ -1,11 +1,12 @@
-module.exports = {
-    database: 'simpleserver',
-    username: 'postgres',
-    password: 'Paraguay40*',
-    params: {
-        dialect: 'postgres',
-        host: 'localhost',
-        port: 5432,
+const postgres = {
+  database: process.env.DB_NAME,
+  username: process.env.USER_NAME,
+  password: process.env.USER_PWD.toString(),
+  params: {
+    dialect: "postgres",
+    host: "localhost",
+    port: 5432,
+  },
+};
 
-    }
-}
+export { postgres };

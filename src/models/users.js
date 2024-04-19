@@ -59,9 +59,9 @@ module.exports = (sequelize, DataType) => {
 
     // Respetar el orden
     // Primero los hasMany
-    Users.associate = (models) => {
-        Users.hasMany(models.Tasks);
-    };
+    // Users.associate = (models) => {
+    //     Users.hasMany(models.Tasks);
+    // };
 
     // Segundo los belongsTo
     Users.associate = (models) => {

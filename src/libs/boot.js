@@ -1,21 +1,15 @@
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
+//import {moment} from moment;
 
-module.exports = app => {
+let hoyAhora = new Date();
+let diaHoy = hoyAhora.toString().slice(0, 3);
+let fullHoraAhora = hoyAhora.toString().slice(16, 21);
 
-    //metodo sync que crea las tablas
-    app.db.sequelize.sync()
-    .then(() => {
-        app.listen(app.get('port'), () => {
-            console.log('Server on port', app.get('port'));
-        });
-        /*https.createServer({
-            key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-            cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
-        }, app).listen(app.get('port'), () => {
-            console.log('Server on port', app.get('port'));
-        });*/
+module.exports = (app) => {
+  //metodo sync que crea las tablas
+  app.db.sequelize.sync().then(() => {
+    app.listen(app.get("port"), () => {
+      console.log("Server on port", app.get("port"));
+      console.log("Simple API iniciado a las:", fullHoraAhora);
     });
-
+  });
 };
