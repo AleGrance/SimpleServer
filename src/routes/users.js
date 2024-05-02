@@ -14,6 +14,22 @@ module.exports = (app) => {
   </div>
   `;
 
+  function validateApiKey(req, res) {
+    if (!req.headers.apikey) {
+      return res.status(403).send({
+        error: "Forbidden",
+        message: "Tu petición no tiene cabecera de autorización",
+      });
+    }
+
+    if (req.headers.apikey != apikey) {
+      return res.status(403).send({
+        error: "Forbidden",
+        message: "Cabecera de autorización inválida",
+      });
+    }
+  }
+
   app
     .route("/api/users")
     .get((req, res) => {
@@ -94,6 +110,8 @@ module.exports = (app) => {
     });
 
   app.route("/users/:user_id").get((req, res) => {
+    validateApiKey(req, res);
+
     Users.findOne({
       where: req.params,
     })
@@ -105,6 +123,8 @@ module.exports = (app) => {
       });
   })
     .patch((req, res) => {
+      validateApiKey(req, res);
+
       let user = req.body;
 
       if (user.user_password) {
