@@ -114,6 +114,7 @@ module.exports = (app) => {
 
     Users.findOne({
       where: req.params,
+      attributes: { exclude: ['user_password'] }
     })
       .then((result) => res.json(result))
       .catch((error) => {
