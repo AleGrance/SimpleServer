@@ -1,32 +1,64 @@
-# Tasks API
+# Simple Nodejs API
 
-Tasks API is a REST API that was created using NodeJS, Express, Babel, Sequelize with SQLite3 
+Simple Nodejs fue creado usando NodeJS, Express, Babel, Sequelize y PostgreSQL
 
-## Installation
+## Installation I
 
-Clone the repo and run npm install
+Clonar el repositorio y ejecutar npm install en la carpeta raiz del proyecto
 
 ```bash
 npm i
 ```
+## Installation II
+
+-Instalar PostgreSQL
+-Crear la base de datos a utilizar
+
+## Config I
+
+Crear el archivo .ENV en la raiz del proyecto y agregar los siguientes datos
+
+DB_NAME=nombre_de_la_base
+USER_NAME=user_de_la_base
+USER_PWD=password_de_la_base
+API_KEY=abc123
 
 ## Usage I
 
-Includes nodemon for development. Run npm run dev while developing
+Incluye nodemon para el entorno de desarrollo. Ejecutar npm run dev mientras se esta desarrollando
 
-```python
+```bash
 npm run dev
 ```
-Then you can test the API using the browser or Postman opening http://localhost:24000/tasks
+
+### Header HTTP
+
+Agregar el apikey en el header de cada solicitud. El apikey puede ser modificado si así lo desea
+
+```bash
+apikey: abc123
+```
+
+### Metodos HTTP
+
+Obtener roles
+```bash
+http://localhost:3000/api/roles
+```
+
+Obtener users
+```bash
+http://localhost:3000/users
+```
 
 ## Usage II
 
-For run in production you need to run npm babel-node to translate the code or just run npm start for start the server
+Para ejecutar en produccion necesitas correr el comando npm run build para transpilar el codigo y npm start para ejecutar el proyecto en produccion
 
-```
+```bash
 npm run build
 npm start
 ```
 
-## License
+## Author
 Alejandro Grance
