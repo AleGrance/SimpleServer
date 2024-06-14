@@ -57,8 +57,9 @@ Obtener users paginado utilizando el metodo `POST`. Metodo especialmente utiliza
 ```bash
 http://localhost:3000/usersFiltered
 ```
+
+Agregar la siguiente estructura en el cuerpo `BODY` de la solicitud `POST` para la paginación.
 ```json
-BODY:
 {
     "search": {
         "value": "ale"
