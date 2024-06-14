@@ -54,10 +54,11 @@ http://localhost:3000/users
 ```
 
 Obtener users paginado. Metodo especialmente utilizado para paginaciones
-```json
+```bash
 POST
-//http://localhost:3000/usersFiltered
-
+http://localhost:3000/usersFiltered
+```
+```json
 BODY:
 {
     "search": {
