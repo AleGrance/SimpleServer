@@ -43,12 +43,29 @@ apikey: abc123
 
 Obtener roles
 ```bash
+GET
 http://localhost:3000/api/roles
 ```
 
 Obtener users
 ```bash
+GET
 http://localhost:3000/users
+```
+
+Obtener users paginado. Metodo especialmente utilizado para paginaciones
+```json
+POST
+//http://localhost:3000/usersFiltered
+
+BODY:
+{
+    "search": {
+        "value": "ale"
+    },
+    "start": 0,
+    "length": 10
+}
 ```
 
 ## Usage II

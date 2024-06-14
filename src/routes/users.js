@@ -1,4 +1,5 @@
 var CryptoJS = require("crypto-js");
+const Sequelize = require("sequelize");
 module.exports = (app) => {
   const apikey = process.env.API_KEY;
 
@@ -76,17 +77,21 @@ module.exports = (app) => {
 
       if (req.headers.apikey === apikey) {
         // Receiving data
-        const { user_name, user_password, user_email, user_fullname, role_id } = req.body;
+        const { user_name, user_password, user_email, user_fullname, role_id } =
+          req.body;
         // Creating new user
         const user = {
           user_name: user_name,
+          user_fullname: user_fullname,
           user_password: user_password,
           user_email: user_email,
-          user_fullname: user_fullname,
           role_id: role_id,
         };
         // Encrypting password
-        user.user_password = CryptoJS.AES.encrypt(user.user_password, "secret").toString();
+        user.user_password = CryptoJS.AES.encrypt(
+          user.user_password,
+          "secret"
+        ).toString();
         // Insert new user
         Users.create(user)
           .then((result) =>
@@ -98,7 +103,7 @@ module.exports = (app) => {
           .catch((error) =>
             res.json({
               status: "error",
-              body: error.errors,
+              body: error,
             })
           );
       } else {
@@ -109,20 +114,22 @@ module.exports = (app) => {
       }
     });
 
-  app.route("/users/:user_id").get((req, res) => {
-    validateApiKey(req, res);
+  app
+    .route("/users/:user_id")
+    .get((req, res) => {
+      validateApiKey(req, res);
 
-    Users.findOne({
-      where: req.params,
-      attributes: { exclude: ['user_password'] }
-    })
-      .then((result) => res.json(result))
-      .catch((error) => {
-        res.status(404).json({
-          msg: error.message,
+      Users.findOne({
+        where: req.params,
+        attributes: { exclude: ["user_password"] },
+      })
+        .then((result) => res.json(result))
+        .catch((error) => {
+          res.status(404).json({
+            msg: error.message,
+          });
         });
-      });
-  })
+    })
     .patch((req, res) => {
       validateApiKey(req, res);
 
@@ -130,29 +137,110 @@ module.exports = (app) => {
 
       if (user.user_password) {
         // Encrypting password
-        user.user_password = CryptoJS.AES.encrypt(user.user_password.toString(), 'secret').toString();
+        user.user_password = CryptoJS.AES.encrypt(
+          user.user_password.toString(),
+          "secret"
+        ).toString();
       }
 
       Users.update(user, {
-        where: req.params
+        where: req.params,
       })
-        .then(result => res.json({
-          status: 'success'
-        }))
-        .catch(error =>
-          res.status(412).json(error.message))
+        .then((result) =>
+          res.json({
+            status: "success",
+          })
+        )
+        .catch((error) => res.status(412).json(error.message));
     })
 
-  // .delete((req, res) => {
-  //     //const id = req.params.id;
-  //     Users.destroy({
-  //             where: req.params
-  //         })
-  //         .then(() => res.json(req.params))
-  //         .catch(error => {
-  //             res.status(412).json({
-  //                 msg: error.message
-  //             });
-  //         })
-  // })
+    .delete((req, res) => {
+      //const id = req.params.id;
+      Users.destroy({
+        where: req.params,
+      })
+        .then(() => res.json(req.params))
+        .catch((error) => {
+          res.status(412).json({
+            msg: error.message,
+          });
+        });
+    });
+
+  // PAGINATION
+  app.route("/api/usersFiltered").post((req, res) => {
+    if (!req.headers.apikey) {
+      return res.status(403).send({
+        error: "Forbidden",
+        message: "Tu petición no tiene cabecera de autorización",
+      });
+    }
+
+    if (req.headers.apikey === apikey) {
+      var search_keyword = req.body.search.value
+        .replace(/[^a-zA-Z 0-9.]+/g, "")
+        .split(" ");
+
+      return Users.count().then((counts) => {
+        var condition = [];
+
+        for (var searchable of search_keyword) {
+          if (searchable !== "") {
+            condition.push({
+              user_name: {
+                [Sequelize.Op.iLike]: `%${searchable}%`,
+              },
+            });
+          }
+        }
+
+        var result = {
+          data: [],
+          recordsTotal: 0,
+          recordsFiltered: 0,
+        };
+
+        if (!counts) {
+          return res.json(result);
+        }
+
+        result.recordsTotal = counts;
+
+        Users.findAndCountAll({
+          offset: req.body.start,
+          limit: req.body.length,
+          where: {
+            [Sequelize.Op.or]:
+              condition.length > 0
+                ? condition
+                : [{ user_name: { [Sequelize.Op.iLike]: "%%" } }],
+          },
+          attributes: {
+            exclude: ["user_password"],
+          },
+          include: [
+            {
+              model: Roles,
+              attributes: ["role_name"],
+            },
+          ],
+          order: [["user_id", "DESC"]],
+        })
+          .then((response) => {
+            result.recordsFiltered = response.count;
+            result.data = response.rows;
+            res.json(result);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: "Internal server error" });
+          });
+      });
+    } else {
+      return res.status(403).send({
+        error: "Forbidden",
+        message: "Cabecera de autorización inválida",
+      });
+    }
+  });
 };
