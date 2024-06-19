@@ -4,16 +4,14 @@
 
 # Simple Nodejs API
 
-## Description
-
-Simple Nodejs fue creado usando NodeJS, Express, Babel, Sequelize y PostgreSQL
+Simple Nodejs API fue creado usando NodeJS, Express, Babel, Sequelize y PostgreSQL
 
 ## Installation I
 
 Clonar el repositorio y ejecutar `npm install` en la carpeta raiz del proyecto
 
 ```bash
-npm i
+npm install
 ```
 ## Installation II
 
@@ -56,12 +54,12 @@ http://localhost:3000/api/roles
 
 Obtener users utilizando el metodo `GET`
 ```bash
-http://localhost:3000/users
+http://localhost:3000/api/users
 ```
 
 Obtener users paginado utilizando el metodo `POST`. Metodo especialmente utilizado para paginaciones
 ```bash
-http://localhost:3000/usersFiltered
+http://localhost:3000/api/usersFiltered
 ```
 
 Agregar la siguiente estructura en el cuerpo `BODY` de la solicitud `POST` para la paginación.
