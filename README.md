@@ -1,4 +1,10 @@
+<p align="center">
+  <a href="https://nodejs.org/en" target="blank"><img src="https://nodejs.org/static/logos/nodejsStackedDark.svg" width="200" alt="Nest Logo" /></a>
+</p>
+
 # Simple Nodejs API
+
+## Description
 
 Simple Nodejs fue creado usando NodeJS, Express, Babel, Sequelize y PostgreSQL
 
