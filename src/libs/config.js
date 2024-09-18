@@ -1,7 +1,7 @@
 const postgres = {
   database: process.env.DB_NAME,
-  username: process.env.USER_NAME,
-  password: process.env.USER_PWD.toString(),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS.toString(),
   params: {
     dialect: "postgres",
     host: "localhost",

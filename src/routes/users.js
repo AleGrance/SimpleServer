@@ -1,5 +1,45 @@
 var CryptoJS = require("crypto-js");
 const Sequelize = require("sequelize");
+
+/**
+ * Loggers
+ */
+
+import winston from "winston";
+import DailyRotateFile from 'winston-daily-rotate-file';
+
+const transport = new DailyRotateFile({
+  filename: 'logs/application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD',
+  zippedArchive: true, // Comprimir archivos antiguos
+  maxSize: '20m',
+  maxFiles: '14d' // Mantener archivos solo por 14 días
+});
+
+const logger = winston.createLogger({
+  transports: [transport],
+});
+
+logger.info('Aplicación iniciada');
+
+// import pino from 'pino';
+// import fs from 'fs';
+
+
+// // Especifica el destino del log
+// const logFile = './logs/output.log';
+
+// // Asegúrate de que la carpeta exista antes de intentar escribir en el archivo
+// if (!fs.existsSync('./logs')) {
+//   fs.mkdirSync('./logs');
+// }
+
+// // Configura pino con pino-pretty
+// const logger = pino({
+//   prettyPrint: true, // Para usar pino-pretty en la consola
+// }, pino.destination(logFile));
+
+
 module.exports = (app) => {
   const apikey = process.env.API_KEY;
 
@@ -76,9 +116,22 @@ module.exports = (app) => {
       }
 
       if (req.headers.apikey === apikey) {
+
+        
+
         // Receiving data
-        const { user_name, user_password, user_email, user_fullname, role_id } =
-          req.body;
+        const { user_name, user_password, user_email, user_fullname, role_id } = req.body;
+
+        /**
+         * Logs
+         */
+        
+        // Log de información
+        logger.info(`Usuario ${user_name} registrado`);
+        // Log de error
+        logger.error('Error detectado');
+
+
         // Creating new user
         const user = {
           user_name: user_name,
