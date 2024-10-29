@@ -4,7 +4,8 @@ const postgres = {
   password: process.env.DB_PASS.toString(),
   params: {
     dialect: "postgres",
-    host: "host.docker.internal",
+    // host: "host.docker.internal",
+    host: "localhost",
     port: 5432,
   },
 };

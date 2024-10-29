@@ -6,25 +6,24 @@ const Sequelize = require("sequelize");
  */
 
 import winston from "winston";
-import DailyRotateFile from 'winston-daily-rotate-file';
+import DailyRotateFile from "winston-daily-rotate-file";
 
 const transport = new DailyRotateFile({
-  filename: 'logs/application-%DATE%.log',
-  datePattern: 'YYYY-MM-DD',
+  filename: "logs/application-%DATE%.log",
+  datePattern: "YYYY-MM-DD",
   zippedArchive: true, // Comprimir archivos antiguos
-  maxSize: '20m',
-  maxFiles: '14d' // Mantener archivos solo por 14 días
+  maxSize: "20m",
+  maxFiles: "14d", // Mantener archivos solo por 14 días
 });
 
 const logger = winston.createLogger({
   transports: [transport],
 });
 
-logger.info('Aplicación iniciada');
+logger.info("Aplicación iniciada");
 
 // import pino from 'pino';
 // import fs from 'fs';
-
 
 // // Especifica el destino del log
 // const logFile = './logs/output.log';
@@ -38,7 +37,6 @@ logger.info('Aplicación iniciada');
 // const logger = pino({
 //   prettyPrint: true, // Para usar pino-pretty en la consola
 // }, pino.destination(logFile));
-
 
 module.exports = (app) => {
   const apikey = process.env.API_KEY;
@@ -84,12 +82,12 @@ module.exports = (app) => {
       if (req.headers.apikey === apikey) {
         Users.findAll({
           attributes: {
-            exclude: ["user_password"],
+            exclude: ["userPassword"],
           },
           include: [
             {
               model: Roles,
-              attributes: ["role_name"],
+              attributes: ["roleName"],
             },
           ],
         })
@@ -116,33 +114,67 @@ module.exports = (app) => {
       }
 
       if (req.headers.apikey === apikey) {
-
-        
-
         // Receiving data
-        const { user_name, user_password, user_email, user_fullname, role_id } = req.body;
+        const { userName, userPassword, userEmail, userFullname, roleId } =
+          req.body;
+
+        if (!userName) {
+          return res.status(400).send({
+            status: 400,
+            message: "El campo userName no puede estar vacío",
+          });
+        }
+
+        if (!userFullname) {
+          return res.status(400).send({
+            status: 400,
+            message: "El campo userFullname no puede estar vacío",
+          });
+        }
+
+        if (!userPassword) {
+          return res.status(400).send({
+            status: 400,
+            message: "El campo userPassword no puede estar vacío",
+          });
+        }
+
+        if (!userEmail) {
+          return res.status(400).send({
+            status: 400,
+            message: "El campo userEmail no puede estar vacío",
+          });
+        }
+
+        if (!roleId) {
+          return res.status(400).send({
+            status: 400,
+            message: "El campo roleId no puede estar vacío",
+          });
+        }
+
+        // console.log(req.body);
 
         /**
          * Logs
          */
-        
-        // Log de información
-        logger.info(`Usuario ${user_name} registrado`);
-        // Log de error
-        logger.error('Error detectado');
 
+        // Log de información
+        logger.info(`Usuario ${userName} registrado`);
+        // Log de error
+        logger.error("Error detectado");
 
         // Creating new user
         const user = {
-          user_name: user_name,
-          user_fullname: user_fullname,
-          user_password: user_password,
-          user_email: user_email,
-          role_id: role_id,
+          userName: userName,
+          userFullname: userFullname,
+          userPassword: userPassword,
+          userEmail: userEmail,
+          roleId: roleId,
         };
         // Encrypting password
-        user.user_password = CryptoJS.AES.encrypt(
-          user.user_password,
+        user.userPassword = CryptoJS.AES.encrypt(
+          user.userPassword,
           "secret"
         ).toString();
         // Insert new user
@@ -153,12 +185,19 @@ module.exports = (app) => {
               body: result,
             })
           )
-          .catch((error) =>
-            res.json({
-              status: "error",
-              body: error,
-            })
-          );
+          .catch((error) => {
+            if (error.name == "SequelizeUniqueConstraintError") {
+              res.status(400).send({
+                status: 400,
+                message: "El nombre ingresado ya existe",
+              });
+            } else {
+              res.json({
+                status: "error",
+                message: "Error interno del servidor",
+              });
+            }
+          });
       } else {
         return res.status(403).send({
           error: "Forbidden",
@@ -168,13 +207,13 @@ module.exports = (app) => {
     });
 
   app
-    .route("/users/:user_id")
+    .route("/users/:userId")
     .get((req, res) => {
       validateApiKey(req, res);
 
       Users.findOne({
         where: req.params,
-        attributes: { exclude: ["user_password"] },
+        attributes: { exclude: ["userPassword"] },
       })
         .then((result) => res.json(result))
         .catch((error) => {
@@ -188,10 +227,10 @@ module.exports = (app) => {
 
       let user = req.body;
 
-      if (user.user_password) {
+      if (user.userPassword) {
         // Encrypting password
-        user.user_password = CryptoJS.AES.encrypt(
-          user.user_password.toString(),
+        user.userPassword = CryptoJS.AES.encrypt(
+          user.userPassword.toString(),
           "secret"
         ).toString();
       }
@@ -221,7 +260,7 @@ module.exports = (app) => {
     });
 
   // PAGINATION
-  app.route("/api/usersFiltered").post((req, res) => {
+  app.route("/api/users-filtered").post((req, res) => {
     if (!req.headers.apikey) {
       return res.status(403).send({
         error: "Forbidden",
@@ -266,18 +305,18 @@ module.exports = (app) => {
             [Sequelize.Op.or]:
               condition.length > 0
                 ? condition
-                : [{ user_name: { [Sequelize.Op.iLike]: "%%" } }],
+                : [{ userName: { [Sequelize.Op.iLike]: "%%" } }],
           },
           attributes: {
-            exclude: ["user_password"],
+            exclude: ["userPassword"],
           },
           include: [
             {
               model: Roles,
-              attributes: ["role_name"],
+              attributes: ["roleName"],
             },
           ],
-          order: [["user_id", "DESC"]],
+          order: [["userId", "DESC"]],
         })
           .then((response) => {
             result.recordsFiltered = response.count;

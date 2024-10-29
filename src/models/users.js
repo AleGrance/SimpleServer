@@ -1,16 +1,17 @@
 module.exports = (sequelize, DataType) => {
 
     const Users = sequelize.define('Users', {
-        user_id: {
+        userId: {
             type: DataType.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
 
-        user_name: {
+        userName: {
             type: DataType.STRING,
             allowNull: false,
             unique: {
+                arg: true,
                 msg: 'El user_name ingresado ya existe!',
                 fields: ['user_name']
             },
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataType) => {
                 }
             }
         },
-        user_fullname: {
+        userFullname: {
             type: DataType.STRING,
             allowNull: false,
             validate: {
@@ -31,7 +32,7 @@ module.exports = (sequelize, DataType) => {
                 }
             }
         },
-        user_password: {
+        userPassword: {
             type: DataType.STRING,
             allowNull: false,
             validate: {
@@ -41,14 +42,16 @@ module.exports = (sequelize, DataType) => {
                 }
             }
         },
-        user_email: {
+        userEmail: {
             type: DataType.STRING,
             allowNull: false,
             unique: {
                 msg: 'El correo ingresado ya existe',
-                fields: ['user_email']
             },
             validate: {
+                isEmail: {
+                    msg: 'El correo ingresado no es valido'
+                },
                 notEmpty: {
                     msg: 'El correo no debe estar vacio!',
                     fields: ['user_email']
@@ -67,7 +70,7 @@ module.exports = (sequelize, DataType) => {
     Users.associate = (models) => {
         Users.belongsTo(models.Roles, {
             foreignKey: {
-                name: 'role_id',
+                name: 'roleId',
                 allowNull: false
             }
         });

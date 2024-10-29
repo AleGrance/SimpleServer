@@ -1,21 +1,25 @@
 module.exports = (sequelize, DataType) => {
 
     const Roles = sequelize.define('Roles', {
-        role_id: {
+        roleId: {
             type: DataType.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        role_name: {
+        roleName: {
             type: DataType.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: {
+                arg: true,
+                msg: 'El nombre ingresado ya existe'
+            },
         }
     });
 
     Roles.associate = (models) => {
         Roles.hasMany(models.Users, {
             foreignKey: {
-                name: 'role_id',
+                name: 'roleId',
                 allowNull: false
             }
         });
