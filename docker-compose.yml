@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    container_name: simple-app
+    ports:
+      - "3100:3100"
+    restart: always
+    command: npm start

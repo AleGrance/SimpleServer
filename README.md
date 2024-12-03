@@ -82,5 +82,10 @@ npm run build
 npm start
 ```
 
+## Docker
+1. Construir la imagen de docker con este comando `docker build -t simple-app .`
+2. Iniciar el contenedor con este comando `docker-compose up -d`
+
+
 ## Author
 Alejandro Grance
